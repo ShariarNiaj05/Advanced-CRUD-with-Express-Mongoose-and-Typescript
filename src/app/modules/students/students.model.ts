@@ -17,7 +17,7 @@ const userNameSchema = new Schema<Name>({
       message: '{VALUE} is not in capitalize format',
     },
   },
-  middleName: { type: String, trim: true, required: false },
+  middleName: { type: String || undefined, trim: true, required: false },
   lastName: {
     type: String,
     trim: true,
@@ -131,7 +131,7 @@ const studentSchema = new Schema<IStudent>({
     trim: true,
     required: [true, 'Local Guardian is Required'],
   },
-  profileImage: { type: String, required: false },
+  profileImage: { type: String || undefined, required: false },
   isActive: {
     type: String,
     enum: ['active', 'blocked'],
