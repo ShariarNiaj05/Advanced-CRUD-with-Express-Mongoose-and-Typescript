@@ -19,6 +19,7 @@ const createStudent = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: 'Unable to Process the Request To Create Student',
+      error: error,
     });
   }
 };
@@ -36,6 +37,7 @@ const getAllStudent = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: 'Unable to Process the Request To Get All the Students',
+      error: error,
     });
   }
 };
@@ -54,6 +56,7 @@ const getSingleStudent = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: 'Unable to Process the Request To Get All the Students',
+      error: error,
     });
   }
 };
