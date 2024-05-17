@@ -212,11 +212,12 @@ const createStudent = async (req: Request, res: Response) => {
       message: 'Student Created Successfully',
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: 'Unable to Process the Request To Create Student',
+      message:
+        error.message || 'Unable to Process the Request To Create Student',
       error: error,
     });
   }
