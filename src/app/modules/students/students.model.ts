@@ -8,7 +8,8 @@ import {
   StudentModel,
 } from './students.interface';
 import validator from 'validator';
-
+import bcrypt from 'bcrypt';
+import config from '../../config';
 const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
@@ -78,6 +79,7 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 const studentSchema = new Schema<TStudent, StudentModel>({
   //StudentMethods>({
   id: { type: String, required: true, unique: true },
+  password: { type: String, required: [true, 'Password is Required'] },
   name: {
     type: userNameSchema,
     required: [true, 'Name is Required'],
@@ -146,6 +148,24 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     default: 'active',
     // required: true,
   },
+});
+
+// pre save middleware / hook
+studentSchema.pre('save', async function (next) {
+  // console.log(this.password, 'Pre hook: we will save the data');
+  // hashing password and save to DB
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_round),
+  );
+  next();
+});
+
+// post save middleware / hook
+studentSchema.post('save', function () {
+  console.log(this, 'post Hook: after save data');
 });
 
 // creating a custom static method
