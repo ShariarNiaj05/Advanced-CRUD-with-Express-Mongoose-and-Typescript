@@ -175,7 +175,16 @@ studentSchema.post('save', function (doc, next) {
 });
 
 studentSchema.pre('find', async function (next) {
-  console.log(this);
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+studentSchema.pre('aggregate', async function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
+
+studentSchema.pre('findOne', async function (next) {
+  this.findOne({ isDeleted: { $ne: true } });
   next();
 });
 

@@ -30,7 +30,8 @@ const getAllStudentsFromDB = async () => {
 
 const getStudentFromDBById = async (id: string) => {
   //mongoose built in static method
-  const result = await Student.findOne({ _id: id });
+  // const result = await Student.findOne({ _id: id });
+  const result = await Student.aggregate([{ $match: { id: id } }]);
   return result;
 };
 
