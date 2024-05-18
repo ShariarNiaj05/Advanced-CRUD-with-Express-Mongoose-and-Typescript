@@ -4,7 +4,7 @@ import {
   TStudent,
   TLocalGuardian,
   TUserName,
-  StudentMethods,
+  // StudentMethods,
   StudentModel,
 } from './students.interface';
 import validator from 'validator';
@@ -75,7 +75,8 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
   },
 });
 
-const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
+const studentSchema = new Schema<TStudent, StudentModel>({
+  //StudentMethods>({
   id: { type: String, required: true, unique: true },
   name: {
     type: userNameSchema,
@@ -147,10 +148,18 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
   },
 });
 
-studentSchema.methods.isUserExits = async function (id: string) {
-  const existingUser = await Student.findOne({ id: id });
+// creating a custom static method
+studentSchema.statics.isUserExists = async function (id: string) {
+  const existingUser = await Student.findOne({ id });
   return existingUser;
 };
+
+// creating a custom instance method
+
+/* studentSchema.methods.isUserExits = async function (id: string) {
+  const existingUser = await Student.findOne({ id: id });
+  return existingUser;
+}; */
 
 const Student = model<TStudent, StudentModel>('Student', studentSchema);
 
