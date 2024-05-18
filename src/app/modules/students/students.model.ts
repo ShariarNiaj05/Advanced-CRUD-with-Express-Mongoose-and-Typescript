@@ -76,82 +76,93 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
   },
 });
 
-const studentSchema = new Schema<TStudent, StudentModel>({
-  //StudentMethods>({
-  id: { type: String, required: true, unique: true },
-  password: { type: String, required: [true, 'Password is Required'] },
-  name: {
-    type: userNameSchema,
-    required: [true, 'Name is Required'],
-  },
-  gender: {
-    type: String,
-    enum: {
-      values: ['male', 'female'],
-      message: `{VALUE} is not supported`,
+const studentSchema = new Schema<TStudent, StudentModel>(
+  {
+    //StudentMethods>({
+    id: { type: String, required: true, unique: true },
+    password: { type: String, required: [true, 'Password is Required'] },
+    name: {
+      type: userNameSchema,
+      required: [true, 'Name is Required'],
     },
-    required: [true, 'Gender is Required'],
-  },
-  dateOfBirth: {
-    type: String,
-    trim: true,
-    required: [true, 'DOB is Required'],
-  },
-  email: {
-    type: String,
-    trim: true,
-    required: [true, 'Email is Required'],
-    unique: true,
-    validate: {
-      validator: (value: string) => validator.isEmail(value),
-      message: '{VALUE} is not in email format',
+    gender: {
+      type: String,
+      enum: {
+        values: ['male', 'female'],
+        message: `{VALUE} is not supported`,
+      },
+      required: [true, 'Gender is Required'],
+    },
+    dateOfBirth: {
+      type: String,
+      trim: true,
+      required: [true, 'DOB is Required'],
+    },
+    email: {
+      type: String,
+      trim: true,
+      required: [true, 'Email is Required'],
+      unique: true,
+      validate: {
+        validator: (value: string) => validator.isEmail(value),
+        message: '{VALUE} is not in email format',
+      },
+    },
+    contactNumber: {
+      type: String,
+      trim: true,
+      required: [true, 'Contact No is Required'],
+    },
+    emergencyContactNumber: {
+      type: String,
+      trim: true,
+      required: [true, 'Emergency No is Required'],
+    },
+    bloodGroup: {
+      type: String,
+      enum: ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'],
+    },
+    presentAddress: {
+      type: String,
+      trim: true,
+      required: [true, 'Present address is Required'],
+    },
+    permanentAddress: {
+      type: String,
+      trim: true,
+      required: [true, 'Permanent is Required'],
+    },
+    guardian: {
+      type: guardianSchema,
+      trim: true,
+      required: [true, 'Guardian is Required'],
+    },
+    localGuardian: {
+      type: localGuardianSchema,
+      trim: true,
+      required: [true, 'Local Guardian is Required'],
+    },
+    profileImage: { type: String || undefined, required: false },
+    isActive: {
+      type: String,
+      enum: ['active', 'blocked'],
+      default: 'active',
+      // required: true,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
   },
-  contactNumber: {
-    type: String,
-    trim: true,
-    required: [true, 'Contact No is Required'],
+  {
+    toJSON: {
+      virtuals: true,
+    },
   },
-  emergencyContactNumber: {
-    type: String,
-    trim: true,
-    required: [true, 'Emergency No is Required'],
-  },
-  bloodGroup: {
-    type: String,
-    enum: ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'],
-  },
-  presentAddress: {
-    type: String,
-    trim: true,
-    required: [true, 'Present address is Required'],
-  },
-  permanentAddress: {
-    type: String,
-    trim: true,
-    required: [true, 'Permanent is Required'],
-  },
-  guardian: {
-    type: guardianSchema,
-    trim: true,
-    required: [true, 'Guardian is Required'],
-  },
-  localGuardian: {
-    type: localGuardianSchema,
-    trim: true,
-    required: [true, 'Local Guardian is Required'],
-  },
-  profileImage: { type: String || undefined, required: false },
-  isActive: {
-    type: String,
-    enum: ['active', 'blocked'],
-    default: 'active',
-    // required: true,
-  },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-  },
+);
+
+studentSchema.virtual('fullName').get(function () {
+  return this.name.firstName + this.name.middleName + this.name.lastName;
 });
 
 // pre save middleware / hook
