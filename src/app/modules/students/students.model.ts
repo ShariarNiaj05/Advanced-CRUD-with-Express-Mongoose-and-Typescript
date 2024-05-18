@@ -148,6 +148,10 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     default: 'active',
     // required: true,
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // pre save middleware / hook
@@ -164,8 +168,15 @@ studentSchema.pre('save', async function (next) {
 });
 
 // post save middleware / hook
-studentSchema.post('save', function () {
-  console.log(this, 'post Hook: after save data');
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+  // console.log(this, 'post Hook: after save data');
+  next();
+});
+
+studentSchema.pre('find', async function (next) {
+  console.log(this);
+  next();
 });
 
 // creating a custom static method

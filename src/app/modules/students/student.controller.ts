@@ -254,7 +254,26 @@ const getSingleStudent = async (req: Request, res: Response) => {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: 'Unable to Process the Request To Get All the Students',
+      message: 'Unable to Process the Request To Get single the Students',
+      error: error,
+    });
+  }
+};
+
+const deleteSingleStudent = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await StudentServices.deleteStudentFromDBById(id);
+    res.status(200).json({
+      success: true,
+      message: 'Deleting single Student Was Successful',
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'Unable to Process the Request To Delete single the Students',
       error: error,
     });
   }
@@ -264,4 +283,5 @@ export const StudentControllers = {
   createStudent,
   getAllStudent,
   getSingleStudent,
+  deleteSingleStudent,
 };
