@@ -185,15 +185,19 @@ studentSchema.post('save', function (doc, next) {
   next();
 });
 
+// find operation
 studentSchema.pre('find', async function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
+
+// aggregate operation
 studentSchema.pre('aggregate', async function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
 });
 
+// single find operation
 studentSchema.pre('findOne', async function (next) {
   this.findOne({ isDeleted: { $ne: true } });
   next();
